@@ -72,6 +72,8 @@ canvas {
 <div id="resultado"></div>
 
 <script>
+
+// 🔹 FRASES
 function gerarRoteiro(tema){
   return [
     "Você já declarou seu " + tema + "?",
@@ -82,6 +84,7 @@ function gerarRoteiro(tema){
   ];
 }
 
+// 🎨 FUNDO (gradiente)
 function gerarFundo(ctx, tema){
   const grad = ctx.createLinearGradient(0,0,1080,1080);
 
@@ -100,6 +103,7 @@ function gerarFundo(ctx, tema){
   ctx.fillRect(0,0,1080,1080);
 }
 
+// 📝 TEXTO
 function desenharTexto(ctx, texto){
   ctx.fillStyle = "white";
   ctx.font = "bold 64px Arial";
@@ -115,14 +119,31 @@ function desenharTexto(ctx, texto){
   });
 }
 
+// 🖼️ LOGO NO RODAPÉ
 function desenharRodape(ctx){
-  ctx.fillStyle = "rgba(255,255,255,0.7)";
-  ctx.font = "28px Arial";
-  ctx.textAlign = "center";
+  const logo = new Image();
+  logo.crossOrigin = "anonymous";
 
-  ctx.fillText("Contábil Sheets", 540, 1020);
+  // LINK DIRETO DA SUA LOGO
+  logo.src = "https://drive.google.com/uc?export=view&id=1eYFSY7rDFX9qaj1Xt-6PD7kdoaH-VFdi";
+
+  logo.onload = function(){
+    const largura = 300;
+    const proporcao = logo.height / logo.width;
+    const altura = largura * proporcao;
+
+    const x = (1080 - largura) / 2;
+    const y = 1080 - altura - 30;
+
+    ctx.drawImage(logo, x, y, largura, altura);
+  };
+
+  logo.onerror = function(){
+    console.log("Erro ao carregar logo");
+  };
 }
 
+// 🔤 QUEBRA TEXTO
 function quebrarTexto(ctx, texto, maxWidth){
   let palavras = texto.split(" ");
   let linhas = [];
@@ -144,6 +165,7 @@ function quebrarTexto(ctx, texto, maxWidth){
   return linhas;
 }
 
+// 🚀 GERADOR
 function gerarCarrossel(){
   const temaInput = document.getElementById("tema").value;
 
@@ -186,6 +208,7 @@ function gerarCarrossel(){
     resultado.appendChild(btn);
   });
 }
+
 </script>
 
 </body>
