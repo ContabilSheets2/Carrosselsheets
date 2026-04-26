@@ -1,3 +1,6 @@
+# Código Completo Atualizado — Gerador Contábil com Fundo Dinâmico e Logo no Rodapé
+
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -34,7 +37,6 @@ input, button {
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 16px;
-  box-sizing: border-box;
 }
 
 button {
@@ -67,7 +69,7 @@ canvas {
 <div class="container">
   <h2>Gerador Contábil</h2>
 
-  <input id="tema" placeholder="Ex: MEI, Imposto de Renda">
+  <input id="tema" placeholder="Ex: MEI, Imposto de Renda, Fluxo de Caixa">
 
   <button onclick="gerarCarrossel()">
     Gerar Slides
@@ -78,7 +80,7 @@ canvas {
 
 <script>
 
-// BASE CONTÁBIL
+// 🧠 BASE INTELIGENTE CONTÁBIL
 const gatilhos = [
 "Você pode estar cometendo um erro grave em",
 "Quase ninguém entende isso sobre",
@@ -119,36 +121,56 @@ const acoes = [
 "tome controle da sua empresa"
 ];
 
-// TEMAS
+// 🎯 TEMAS CONTÁBEIS
 const termosContabeis = [
 "Simples Nacional",
 "MEI",
 "Imposto de Renda",
 "Lucro Presumido",
 "Lucro Real",
+"Folha de Pagamento",
 "Fluxo de Caixa",
 "Planejamento Tributário",
-"Nota Fiscal"
+"Nota Fiscal",
+"Obrigações Fiscais"
 ];
 
-// IMAGENS POR TEMA
+// 🖼️ IMAGENS POR TEMA
 const imagensTema = {
-  "MEI": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1200&auto=format&fit=crop",
-  "Simples Nacional": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1200&auto=format&fit=crop",
-  "Imposto de Renda": "https://images.unsplash.com/photo-1554224154-26032ffc0d07?q=80&w=1200&auto=format&fit=crop",
-  "Lucro Presumido": "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1200&auto=format&fit=crop",
-  "Lucro Real": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=1200&auto=format&fit=crop",
-  "Fluxo de Caixa": "https://images.unsplash.com/photo-1556740749-887f6717d7e4?q=80&w=1200&auto=format&fit=crop",
-  "Planejamento Tributário": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop",
-  "Nota Fiscal": "https://images.unsplash.com/photo-1554224154-22dec7ec8818?q=80&w=1200&auto=format&fit=crop"
+  "MEI": [
+    "https://images.pexels.com/photos/6693655/pexels-photo-6693655.jpeg",
+    "https://images.pexels.com/photos/6863183/pexels-photo-6863183.jpeg",
+    "https://images.pexels.com/photos/7681091/pexels-photo-7681091.jpeg",
+    "https://images.pexels.com/photos/4386370/pexels-photo-4386370.jpeg",
+    "https://images.pexels.com/photos/7821485/pexels-photo-7821485.jpeg"
+  ],
+
+  "Imposto de Renda": [
+    "https://images.pexels.com/photos/6694543/pexels-photo-6694543.jpeg",
+    "https://images.pexels.com/photos/7821703/pexels-photo-7821703.jpeg",
+    "https://images.pexels.com/photos/6863257/pexels-photo-6863257.jpeg"
+  ],
+
+  "Fluxo de Caixa": [
+    "https://images.pexels.com/photos/6693655/pexels-photo-6693655.jpeg",
+    "https://images.pexels.com/photos/7821703/pexels-photo-7821703.jpeg",
+    "https://images.pexels.com/photos/6863183/pexels-photo-6863183.jpeg"
+  ],
+
+  "default": [
+    "https://images.pexels.com/photos/6693655/pexels-photo-6693655.jpeg",
+    "https://images.pexels.com/photos/6863183/pexels-photo-6863183.jpeg",
+    "https://images.pexels.com/photos/4386370/pexels-photo-4386370.jpeg",
+    "https://images.pexels.com/photos/7821485/pexels-photo-7821485.jpeg"
+  ]
 };
 
-// RANDOM
+// 🔀 RANDOM
 function random(arr){
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// GERAR TEXTO
+// 🚀 GERAR ROTEIRO
 function gerarRoteiro(tema){
 
   if(!tema){
@@ -164,13 +186,18 @@ function gerarRoteiro(tema){
   ];
 }
 
-// FUNDO
-function gerarFundo(ctx, tema, callback){
+// 🖼️ GERAR FUNDO POR IMAGEM
+function gerarFundo(ctx, tema, slideIndex, callback){
 
   const imagem = new Image();
 
-  const urlImagem = imagensTema[tema] ||
-  "https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1200&auto=format&fit=crop";
+  const imagens = imagensTema[tema] || [
+    "https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1200&auto=format&fit=crop"
+  ];
+
+  const urlImagem = imagens[slideIndex % imagens.length];
 
   imagem.crossOrigin = "anonymous";
   imagem.src = urlImagem;
@@ -179,7 +206,6 @@ function gerarFundo(ctx, tema, callback){
 
     ctx.drawImage(imagem, 0, 0, 1080, 1080);
 
-    // camada escura
     ctx.fillStyle = "rgba(0,0,0,0.45)";
     ctx.fillRect(0,0,1080,1080);
 
@@ -187,7 +213,7 @@ function gerarFundo(ctx, tema, callback){
   };
 }
 
-// TEXTO
+// 📝 TEXTO
 function desenharTexto(ctx, texto){
 
   ctx.fillStyle = "white";
@@ -221,19 +247,20 @@ function desenharTexto(ctx, texto){
   });
 }
 
-// LOGO
+// 🏢 LOGO NO RODAPÉ
 function desenharLogo(ctx, callback){
 
   const logo = new Image();
 
-  // coloque sua logo no mesmo diretório
-  logo.src = "logo.png";
+  // coloque o nome correto da sua logo
+  logo.src = "https://drive.google.com/thumbnail?id=1eYFSY7rDFX9qaj1Xt-6PD7kdoaH-VFdi&sz=w1000";
 
   logo.onload = function(){
 
     const largura = 300;
     const altura = (logo.height / logo.width) * largura;
 
+    // fundo branco suave
     ctx.fillStyle = "rgba(255,255,255,0.88)";
     ctx.fillRect(270, 890, 540, 130);
 
@@ -247,17 +274,15 @@ function desenharLogo(ctx, callback){
 
     if(callback) callback();
   };
-
-  logo.onerror = function(){
-    if(callback) callback();
-  };
 }
 
-// GERAR CARROSSEL
+// 🚀 GERAR CARROSSEL
 function gerarCarrossel(){
 
   const tema = document.getElementById("tema").value;
+
   const roteiro = gerarRoteiro(tema);
+
   const resultado = document.getElementById("resultado");
 
   resultado.innerHTML = "";
@@ -271,7 +296,7 @@ function gerarCarrossel(){
 
     const ctx = canvas.getContext("2d");
 
-    gerarFundo(ctx, tema, () => {
+    gerarFundo(ctx, tema, i, () => {
 
       desenharTexto(ctx, texto);
 
@@ -281,13 +306,14 @@ function gerarCarrossel(){
 
         const btn = document.createElement("button");
 
-        btn.innerText = "Baixar slide " + (i + 1);
+        btn.innerText = "Baixar slide " + (i+1);
 
         btn.onclick = () => {
 
           const link = document.createElement("a");
 
-          link.download = "slide_" + (i + 1) + ".png";
+          link.download = "slide_" + (i+1) + ".png";
+
           link.href = canvas.toDataURL("image/png");
 
           link.click();
@@ -303,3 +329,14 @@ function gerarCarrossel(){
 
 </body>
 </html>
+```
+
+## Observação
+
+Coloque sua logo no mesmo diretório do HTML com o nome:
+
+```text
+logo.png
+```
+
+Assim ela aparecerá automaticamente no rodapé de todos os slides.
