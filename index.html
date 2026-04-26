@@ -77,7 +77,7 @@ canvas {
 
 <script>
 
-// 🧠 BASE INTELIGENTE CONTÁBIL
+// BASE
 const gatilhos = [
 "Você pode estar cometendo um erro grave em",
 "Quase ninguém entende isso sobre",
@@ -110,15 +110,6 @@ const solucoes = [
 "você pode ajustar isso rapidamente"
 ];
 
-const acoes = [
-"revise isso hoje",
-"organize sua contabilidade",
-"evite problemas futuros",
-"comece a corrigir agora",
-"tome controle da sua empresa"
-];
-
-// 🎯 TEMAS CONTÁBEIS
 const termosContabeis = [
 "Simples Nacional",
 "MEI",
@@ -132,44 +123,25 @@ const termosContabeis = [
 "Obrigações Fiscais"
 ];
 
-// 🖼️ IMAGENS POR TEMA
+// IMAGENS
 const imagensTema = {
   "MEI": [
     "https://images.pexels.com/photos/6693655/pexels-photo-6693655.jpeg",
     "https://images.pexels.com/photos/6863183/pexels-photo-6863183.jpeg",
-    "https://images.pexels.com/photos/7681091/pexels-photo-7681091.jpeg",
-    "https://images.pexels.com/photos/4386370/pexels-photo-4386370.jpeg",
-    "https://images.pexels.com/photos/7821485/pexels-photo-7821485.jpeg"
+    "https://images.pexels.com/photos/7681091/pexels-photo-7681091.jpeg"
   ],
-
-  "Imposto de Renda": [
-    "https://images.pexels.com/photos/6694543/pexels-photo-6694543.jpeg",
-    "https://images.pexels.com/photos/7821703/pexels-photo-7821703.jpeg",
-    "https://images.pexels.com/photos/6863257/pexels-photo-6863257.jpeg"
-  ],
-
-  "Fluxo de Caixa": [
-    "https://images.pexels.com/photos/6693655/pexels-photo-6693655.jpeg",
-    "https://images.pexels.com/photos/7821703/pexels-photo-7821703.jpeg",
-    "https://images.pexels.com/photos/6863183/pexels-photo-6863183.jpeg"
-  ],
-
   "default": [
     "https://images.pexels.com/photos/6693655/pexels-photo-6693655.jpeg",
     "https://images.pexels.com/photos/6863183/pexels-photo-6863183.jpeg",
-    "https://images.pexels.com/photos/4386370/pexels-photo-4386370.jpeg",
-    "https://images.pexels.com/photos/7821485/pexels-photo-7821485.jpeg"
+    "https://images.pexels.com/photos/4386370/pexels-photo-4386370.jpeg"
   ]
 };
 
-// 🔀 RANDOM
 function random(arr){
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// 🚀 GERAR ROTEIRO
 function gerarRoteiro(tema){
-
   if(!tema){
     tema = random(termosContabeis);
   }
@@ -183,21 +155,15 @@ function gerarRoteiro(tema){
   ];
 }
 
-// 🖼️ GERAR FUNDO POR IMAGEM
+// FUNDO
 function gerarFundo(ctx, tema, slideIndex, callback){
 
   const imagem = new Image();
 
-  const imagens = imagensTema[tema] || [
-    "https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1200&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1200&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1200&auto=format&fit=crop"
-  ];
-
-  const urlImagem = imagens[slideIndex % imagens.length];
+  const imagens = imagensTema[tema] || imagensTema["default"];
 
   imagem.crossOrigin = "anonymous";
-  imagem.src = urlImagem;
+  imagem.src = imagens[slideIndex % imagens.length];
 
   imagem.onload = function(){
 
@@ -210,7 +176,7 @@ function gerarFundo(ctx, tema, slideIndex, callback){
   };
 }
 
-// 📝 TEXTO
+// TEXTO
 function desenharTexto(ctx, texto){
 
   ctx.fillStyle = "white";
@@ -223,7 +189,6 @@ function desenharTexto(ctx, texto){
   let linha = "";
 
   palavras.forEach(p => {
-
     const teste = linha + p + " ";
 
     if(ctx.measureText(teste).width > 820){
@@ -244,22 +209,17 @@ function desenharTexto(ctx, texto){
   });
 }
 
-// 🏢 LOGO NO RODAPÉ
+// LOGO (SEM BARRA BRANCA)
 function desenharLogo(ctx, callback){
 
   const logo = new Image();
 
-  // coloque o nome correto da sua logo
   logo.src = "https://drive.google.com/thumbnail?id=1k6sHQ7CTZ2zJdhjJajLWB-0LNNJbfQPm&sz=w1000";
 
   logo.onload = function(){
 
     const largura = 300;
     const altura = (logo.height / logo.width) * largura;
-
-    // fundo branco suave
-    ctx.fillStyle = "rgba(255,255,255,0.88)";
-    ctx.fillRect(270, 890, 540, 130);
 
     ctx.drawImage(
       logo,
@@ -273,7 +233,7 @@ function desenharLogo(ctx, callback){
   };
 }
 
-// 🚀 GERAR CARROSSEL
+// GERAR
 function gerarCarrossel(){
 
   const tema = document.getElementById("tema").value;
