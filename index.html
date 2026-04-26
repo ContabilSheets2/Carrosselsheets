@@ -23,17 +23,12 @@ body {
   box-shadow: 0 0 15px rgba(0,0,0,0.08);
 }
 
-h2 {
-  margin-bottom: 20px;
-}
-
 input, button {
   width: 100%;
   padding: 12px;
   margin-top: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
-  font-size: 16px;
 }
 
 button {
@@ -41,22 +36,12 @@ button {
   color: white;
   cursor: pointer;
   border: none;
-  transition: 0.3s;
-}
-
-button:hover {
-  background: #1b366d;
 }
 
 canvas {
   width: 100%;
   max-width: 320px;
   margin-top: 20px;
-  border-radius: 8px;
-}
-
-#resultado {
-  margin-top: 30px;
 }
 </style>
 </head>
@@ -65,22 +50,15 @@ canvas {
 
 <div class="container">
   <h2>Gerador Contábil</h2>
-
-  <input id="tema" placeholder="Ex: MEI, Imposto de Renda, Fluxo de Caixa">
-
-  <button onclick="gerarCarrossel()">
-    Gerar Slides
-  </button>
+  <input id="tema" placeholder="Ex: MEI, Imposto de Renda">
+  <button onclick="gerarCarrossel()">Gerar Slides</button>
 </div>
 
 <div id="resultado"></div>
 
 <script>
 
-// BASE
 const gatilhos = [
-"Você pode estar cometendo um erro grave em",
-"Quase ninguém entende isso sobre",
 "Atenção com",
 "Erro comum em",
 "Você realmente domina"
@@ -89,51 +67,29 @@ const gatilhos = [
 const problemas = [
 "muitas empresas pagam imposto errado",
 "erros podem gerar multas pesadas",
-"falta de controle financeiro prejudica",
-"a desorganização custa caro",
-"pequenos erros viram grandes prejuízos"
+"a desorganização custa caro"
 ];
 
 const impactos = [
 "isso pode te levar para a malha fina",
-"você pode perder dinheiro sem perceber",
-"seu negócio pode sofrer penalidades",
-"isso pode gerar problemas fiscais",
-"seu lucro pode estar sendo reduzido"
+"você pode perder dinheiro",
+"seu negócio pode sofrer penalidades"
 ];
 
 const solucoes = [
 "mas isso pode ser evitado facilmente",
 "com organização tudo muda",
-"com orientação correta você resolve",
-"existe uma forma simples de corrigir",
 "você pode ajustar isso rapidamente"
 ];
 
 const termosContabeis = [
-"Simples Nacional",
-"MEI",
-"Imposto de Renda",
-"Lucro Presumido",
-"Lucro Real",
-"Folha de Pagamento",
-"Fluxo de Caixa",
-"Planejamento Tributário",
-"Nota Fiscal",
-"Obrigações Fiscais"
+"MEI","Imposto de Renda","Fluxo de Caixa"
 ];
 
-// IMAGENS
 const imagensTema = {
-  "MEI": [
-    "https://images.pexels.com/photos/6693655/pexels-photo-6693655.jpeg",
-    "https://images.pexels.com/photos/6863183/pexels-photo-6863183.jpeg",
-    "https://images.pexels.com/photos/7681091/pexels-photo-7681091.jpeg"
-  ],
   "default": [
     "https://images.pexels.com/photos/6693655/pexels-photo-6693655.jpeg",
-    "https://images.pexels.com/photos/6863183/pexels-photo-6863183.jpeg",
-    "https://images.pexels.com/photos/4386370/pexels-photo-4386370.jpeg"
+    "https://images.pexels.com/photos/6863183/pexels-photo-6863183.jpeg"
   ]
 };
 
@@ -142,9 +98,7 @@ function random(arr){
 }
 
 function gerarRoteiro(tema){
-  if(!tema){
-    tema = random(termosContabeis);
-  }
+  if(!tema) tema = random(termosContabeis);
 
   return [
     `${random(gatilhos)} ${tema}?`,
@@ -155,42 +109,32 @@ function gerarRoteiro(tema){
   ];
 }
 
-// FUNDO
-function gerarFundo(ctx, tema, slideIndex, callback){
+function gerarFundo(ctx, tema, i, callback){
+  const img = new Image();
+  const imagens = imagensTema["default"];
 
-  const imagem = new Image();
+  img.crossOrigin = "anonymous";
+  img.src = imagens[i % imagens.length];
 
-  const imagens = imagensTema[tema] || imagensTema["default"];
-
-  imagem.crossOrigin = "anonymous";
-  imagem.src = imagens[slideIndex % imagens.length];
-
-  imagem.onload = function(){
-
-    ctx.drawImage(imagem, 0, 0, 1080, 1080);
-
+  img.onload = () => {
+    ctx.drawImage(img, 0, 0, 1080, 1080);
     ctx.fillStyle = "rgba(0,0,0,0.45)";
     ctx.fillRect(0,0,1080,1080);
-
     callback();
   };
 }
 
-// TEXTO
 function desenharTexto(ctx, texto){
-
   ctx.fillStyle = "white";
   ctx.font = "bold 62px Arial";
   ctx.textAlign = "center";
 
   const palavras = texto.split(" ");
-
   let linhas = [];
   let linha = "";
 
   palavras.forEach(p => {
     const teste = linha + p + " ";
-
     if(ctx.measureText(teste).width > 820){
       linhas.push(linha);
       linha = p + " ";
@@ -209,11 +153,10 @@ function desenharTexto(ctx, texto){
   });
 }
 
-// LOGO (SEM BARRA BRANCA)
+// 🔥 LOGO AJUSTADA (SUBIDA)
 function desenharLogo(ctx, callback){
 
   const logo = new Image();
-
   logo.src = "https://drive.google.com/thumbnail?id=1k6sHQ7CTZ2zJdhjJajLWB-0LNNJbfQPm&sz=w1000";
 
   logo.onload = function(){
@@ -224,7 +167,7 @@ function desenharLogo(ctx, callback){
     ctx.drawImage(
       logo,
       (1080 - largura) / 2,
-      910,
+      850, // 👈 SUBIU AQUI
       largura,
       altura
     );
@@ -233,13 +176,10 @@ function desenharLogo(ctx, callback){
   };
 }
 
-// GERAR
 function gerarCarrossel(){
 
   const tema = document.getElementById("tema").value;
-
   const roteiro = gerarRoteiro(tema);
-
   const resultado = document.getElementById("resultado");
 
   resultado.innerHTML = "";
@@ -247,7 +187,6 @@ function gerarCarrossel(){
   roteiro.forEach((texto, i) => {
 
     const canvas = document.createElement("canvas");
-
     canvas.width = 1080;
     canvas.height = 1080;
 
@@ -262,17 +201,12 @@ function gerarCarrossel(){
         resultado.appendChild(canvas);
 
         const btn = document.createElement("button");
-
         btn.innerText = "Baixar slide " + (i+1);
 
         btn.onclick = () => {
-
           const link = document.createElement("a");
-
           link.download = "slide_" + (i+1) + ".png";
-
           link.href = canvas.toDataURL("image/png");
-
           link.click();
         };
 
