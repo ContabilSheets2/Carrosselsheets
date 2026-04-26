@@ -7,29 +7,57 @@
 
 <style>
 body {
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   background: #f2f2f2;
   text-align: center;
+  margin: 0;
+  padding: 30px;
 }
 
 .container {
-  max-width: 400px;
+  max-width: 500px;
   margin: auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.08);
+}
+
+h2 {
+  margin-bottom: 20px;
 }
 
 input, button {
   width: 100%;
   padding: 12px;
   margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+button {
+  background: #23458b;
+  color: white;
+  cursor: pointer;
+  border: none;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #1b366d;
 }
 
 canvas {
   width: 100%;
   max-width: 320px;
-  margin-top: 15px;
+  margin-top: 20px;
+  border-radius: 8px;
+}
+
+#resultado {
+  margin-top: 30px;
 }
 </style>
 </head>
@@ -38,15 +66,19 @@ canvas {
 
 <div class="container">
   <h2>Gerador Contábil</h2>
-  <input id="tema" placeholder="Ex: Simples Nacional">
-  <button onclick="gerarCarrossel()">Gerar Slides</button>
+
+  <input id="tema" placeholder="Ex: MEI, Imposto de Renda">
+
+  <button onclick="gerarCarrossel()">
+    Gerar Slides
+  </button>
 </div>
 
 <div id="resultado"></div>
 
 <script>
 
-// 🧠 BASE INTELIGENTE CONTÁBIL
+// BASE CONTÁBIL
 const gatilhos = [
 "Você pode estar cometendo um erro grave em",
 "Quase ninguém entende isso sobre",
@@ -87,26 +119,36 @@ const acoes = [
 "tome controle da sua empresa"
 ];
 
-// 🎯 PALAVRAS CONTÁBEIS (gera contexto)
+// TEMAS
 const termosContabeis = [
 "Simples Nacional",
 "MEI",
 "Imposto de Renda",
 "Lucro Presumido",
 "Lucro Real",
-"Folha de Pagamento",
 "Fluxo de Caixa",
 "Planejamento Tributário",
-"Nota Fiscal",
-"Obrigações Fiscais"
+"Nota Fiscal"
 ];
 
-// 🔀 RANDOM
+// IMAGENS POR TEMA
+const imagensTema = {
+  "MEI": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1200&auto=format&fit=crop",
+  "Simples Nacional": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1200&auto=format&fit=crop",
+  "Imposto de Renda": "https://images.unsplash.com/photo-1554224154-26032ffc0d07?q=80&w=1200&auto=format&fit=crop",
+  "Lucro Presumido": "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1200&auto=format&fit=crop",
+  "Lucro Real": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=1200&auto=format&fit=crop",
+  "Fluxo de Caixa": "https://images.unsplash.com/photo-1556740749-887f6717d7e4?q=80&w=1200&auto=format&fit=crop",
+  "Planejamento Tributário": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop",
+  "Nota Fiscal": "https://images.unsplash.com/photo-1554224154-22dec7ec8818?q=80&w=1200&auto=format&fit=crop"
+};
+
+// RANDOM
 function random(arr){
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// 🚀 GERAR ROTEIRO INTELIGENTE
+// GERAR TEXTO
 function gerarRoteiro(tema){
 
   if(!tema){
@@ -122,29 +164,46 @@ function gerarRoteiro(tema){
   ];
 }
 
-// 🎨 FUNDO
-function gerarFundo(ctx){
-  const grad = ctx.createLinearGradient(0,0,1080,1080);
-  grad.addColorStop(0,"#1e3c72");
-  grad.addColorStop(1,"#2a5298");
+// FUNDO
+function gerarFundo(ctx, tema, callback){
 
-  ctx.fillStyle = grad;
-  ctx.fillRect(0,0,1080,1080);
+  const imagem = new Image();
+
+  const urlImagem = imagensTema[tema] ||
+  "https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1200&auto=format&fit=crop";
+
+  imagem.crossOrigin = "anonymous";
+  imagem.src = urlImagem;
+
+  imagem.onload = function(){
+
+    ctx.drawImage(imagem, 0, 0, 1080, 1080);
+
+    // camada escura
+    ctx.fillStyle = "rgba(0,0,0,0.45)";
+    ctx.fillRect(0,0,1080,1080);
+
+    callback();
+  };
 }
 
-// 📝 TEXTO
+// TEXTO
 function desenharTexto(ctx, texto){
+
   ctx.fillStyle = "white";
-  ctx.font = "bold 60px Arial";
+  ctx.font = "bold 62px Arial";
   ctx.textAlign = "center";
 
   const palavras = texto.split(" ");
+
   let linhas = [];
   let linha = "";
 
   palavras.forEach(p => {
-    let teste = linha + p + " ";
-    if(ctx.measureText(teste).width > 800){
+
+    const teste = linha + p + " ";
+
+    if(ctx.measureText(teste).width > 820){
       linhas.push(linha);
       linha = p + " ";
     } else {
@@ -158,23 +217,43 @@ function desenharTexto(ctx, texto){
 
   linhas.forEach(l => {
     ctx.fillText(l, 540, y);
-    y += 70;
+    y += 75;
   });
 }
 
-// 🖼️ LOGO (RECOMENDO SUBIR NO GITHUB)
-function desenharLogo(ctx){
+// LOGO
+function desenharLogo(ctx, callback){
+
   const logo = new Image();
-  logo.src = "https://raw.githubusercontent.com/SEU-USUARIO/SEU-REPO/main/logo.png";
+
+  // coloque sua logo no mesmo diretório
+  logo.src = "logo.png";
 
   logo.onload = function(){
-    const largura = 250;
+
+    const largura = 300;
     const altura = (logo.height / logo.width) * largura;
-    ctx.drawImage(logo, (1080-largura)/2, 900, largura, altura);
+
+    ctx.fillStyle = "rgba(255,255,255,0.88)";
+    ctx.fillRect(270, 890, 540, 130);
+
+    ctx.drawImage(
+      logo,
+      (1080 - largura) / 2,
+      910,
+      largura,
+      altura
+    );
+
+    if(callback) callback();
+  };
+
+  logo.onerror = function(){
+    if(callback) callback();
   };
 }
 
-// 🚀 GERAR CARROSSEL
+// GERAR CARROSSEL
 function gerarCarrossel(){
 
   const tema = document.getElementById("tema").value;
@@ -186,28 +265,37 @@ function gerarCarrossel(){
   roteiro.forEach((texto, i) => {
 
     const canvas = document.createElement("canvas");
+
     canvas.width = 1080;
     canvas.height = 1080;
 
     const ctx = canvas.getContext("2d");
 
-    gerarFundo(ctx);
-    desenharTexto(ctx, texto);
-    desenharLogo(ctx);
+    gerarFundo(ctx, tema, () => {
 
-    resultado.appendChild(canvas);
+      desenharTexto(ctx, texto);
 
-    const btn = document.createElement("button");
-    btn.innerText = "Baixar slide " + (i+1);
+      desenharLogo(ctx, () => {
 
-    btn.onclick = () => {
-      const link = document.createElement("a");
-      link.download = "slide_" + (i+1) + ".png";
-      link.href = canvas.toDataURL();
-      link.click();
-    };
+        resultado.appendChild(canvas);
 
-    resultado.appendChild(btn);
+        const btn = document.createElement("button");
+
+        btn.innerText = "Baixar slide " + (i + 1);
+
+        btn.onclick = () => {
+
+          const link = document.createElement("a");
+
+          link.download = "slide_" + (i + 1) + ".png";
+          link.href = canvas.toDataURL("image/png");
+
+          link.click();
+        };
+
+        resultado.appendChild(btn);
+      });
+    });
   });
 }
 
