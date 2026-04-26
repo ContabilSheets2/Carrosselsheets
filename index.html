@@ -3,18 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gerador de Carrossel</title>
+<title>Gerador Contábil</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
-
 body {
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   background: #f2f2f2;
-  margin: 0;
-  padding: 10px;
   text-align: center;
 }
 
@@ -26,37 +20,16 @@ body {
   border-radius: 10px;
 }
 
-input {
+input, button {
   width: 100%;
   padding: 12px;
-  margin-bottom: 10px;
-  font-size: 16px;
-}
-
-button {
-  width: 100%;
-  padding: 15px;
-  background: black;
-  color: white;
-  border: none;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#resultado {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 canvas {
-  margin: 15px 0;
   width: 100%;
   max-width: 320px;
-  border: 1px solid #ccc;
-}
-
-.download-btn {
-  margin-bottom: 20px;
+  margin-top: 15px;
 }
 </style>
 </head>
@@ -64,8 +37,8 @@ canvas {
 <body>
 
 <div class="container">
-  <h2>Gerador de Carrossel</h2>
-  <input id="tema" placeholder="Digite o tema (ex: imposto de renda)">
+  <h2>Gerador Contábil</h2>
+  <input id="tema" placeholder="Ex: Simples Nacional">
   <button onclick="gerarCarrossel()">Gerar Slides</button>
 </div>
 
@@ -73,31 +46,87 @@ canvas {
 
 <script>
 
-// 🔹 FRASES
+// 🧠 BASE INTELIGENTE CONTÁBIL
+const gatilhos = [
+"Você pode estar cometendo um erro grave em",
+"Quase ninguém entende isso sobre",
+"Atenção com",
+"Erro comum em",
+"Você realmente domina"
+];
+
+const problemas = [
+"muitas empresas pagam imposto errado",
+"erros podem gerar multas pesadas",
+"falta de controle financeiro prejudica",
+"a desorganização custa caro",
+"pequenos erros viram grandes prejuízos"
+];
+
+const impactos = [
+"isso pode te levar para a malha fina",
+"você pode perder dinheiro sem perceber",
+"seu negócio pode sofrer penalidades",
+"isso pode gerar problemas fiscais",
+"seu lucro pode estar sendo reduzido"
+];
+
+const solucoes = [
+"mas isso pode ser evitado facilmente",
+"com organização tudo muda",
+"com orientação correta você resolve",
+"existe uma forma simples de corrigir",
+"você pode ajustar isso rapidamente"
+];
+
+const acoes = [
+"revise isso hoje",
+"organize sua contabilidade",
+"evite problemas futuros",
+"comece a corrigir agora",
+"tome controle da sua empresa"
+];
+
+// 🎯 PALAVRAS CONTÁBEIS (gera contexto)
+const termosContabeis = [
+"Simples Nacional",
+"MEI",
+"Imposto de Renda",
+"Lucro Presumido",
+"Lucro Real",
+"Folha de Pagamento",
+"Fluxo de Caixa",
+"Planejamento Tributário",
+"Nota Fiscal",
+"Obrigações Fiscais"
+];
+
+// 🔀 RANDOM
+function random(arr){
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// 🚀 GERAR ROTEIRO INTELIGENTE
 function gerarRoteiro(tema){
+
+  if(!tema){
+    tema = random(termosContabeis);
+  }
+
   return [
-    "Você já declarou seu " + tema + "?",
-    "Muitas pessoas ignoram essa obrigação...",
-    "Isso pode gerar multas e problemas legais",
-    "Evite dores de cabeça com a Receita",
-    "Faça sua declaração agora mesmo"
+    `${random(gatilhos)} ${tema}?`,
+    `${random(problemas)}`,
+    `${random(impactos)}`,
+    `${random(solucoes)}`,
+    `${random(acoes)} relacionado a ${tema}`
   ];
 }
 
-// 🎨 FUNDO (gradiente)
-function gerarFundo(ctx, tema){
+// 🎨 FUNDO
+function gerarFundo(ctx){
   const grad = ctx.createLinearGradient(0,0,1080,1080);
-
-  if(tema.includes("imposto")){
-    grad.addColorStop(0,"#0f2027");
-    grad.addColorStop(1,"#203a43");
-  } else if(tema.includes("dinheiro")){
-    grad.addColorStop(0,"#134E5E");
-    grad.addColorStop(1,"#71B280");
-  } else {
-    grad.addColorStop(0,"#232526");
-    grad.addColorStop(1,"#414345");
-  }
+  grad.addColorStop(0,"#1e3c72");
+  grad.addColorStop(1,"#2a5298");
 
   ctx.fillStyle = grad;
   ctx.fillRect(0,0,1080,1080);
@@ -106,54 +135,16 @@ function gerarFundo(ctx, tema){
 // 📝 TEXTO
 function desenharTexto(ctx, texto){
   ctx.fillStyle = "white";
-  ctx.font = "bold 64px Arial";
+  ctx.font = "bold 60px Arial";
   ctx.textAlign = "center";
 
-  const linhas = quebrarTexto(ctx, texto, 850);
-
-  let y = 500 - (linhas.length * 40);
-
-  linhas.forEach(l => {
-    ctx.fillText(l, 540, y);
-    y += 80;
-  });
-}
-
-// 🖼️ LOGO NO RODAPÉ
-function desenharRodape(ctx){
-  const logo = new Image();
-  logo.crossOrigin = "anonymous";
-
-  // LINK DIRETO DA SUA LOGO
-  logo.src = "https://drive.google.com/uc?export=view&id=1eYFSY7rDFX9qaj1Xt-6PD7kdoaH-VFdi";
-
-  logo.onload = function(){
-    const largura = 300;
-    const proporcao = logo.height / logo.width;
-    const altura = largura * proporcao;
-
-    const x = (1080 - largura) / 2;
-    const y = 1080 - altura - 30;
-
-    ctx.drawImage(logo, x, y, largura, altura);
-  };
-
-  logo.onerror = function(){
-    console.log("Erro ao carregar logo");
-  };
-}
-
-// 🔤 QUEBRA TEXTO
-function quebrarTexto(ctx, texto, maxWidth){
-  let palavras = texto.split(" ");
+  const palavras = texto.split(" ");
   let linhas = [];
   let linha = "";
 
   palavras.forEach(p => {
     let teste = linha + p + " ";
-    let largura = ctx.measureText(teste).width;
-
-    if(largura > maxWidth){
+    if(ctx.measureText(teste).width > 800){
       linhas.push(linha);
       linha = p + " ";
     } else {
@@ -162,19 +153,31 @@ function quebrarTexto(ctx, texto, maxWidth){
   });
 
   linhas.push(linha);
-  return linhas;
+
+  let y = 450 - (linhas.length * 30);
+
+  linhas.forEach(l => {
+    ctx.fillText(l, 540, y);
+    y += 70;
+  });
 }
 
-// 🚀 GERADOR
+// 🖼️ LOGO (RECOMENDO SUBIR NO GITHUB)
+function desenharLogo(ctx){
+  const logo = new Image();
+  logo.src = "https://raw.githubusercontent.com/SEU-USUARIO/SEU-REPO/main/logo.png";
+
+  logo.onload = function(){
+    const largura = 250;
+    const altura = (logo.height / logo.width) * largura;
+    ctx.drawImage(logo, (1080-largura)/2, 900, largura, altura);
+  };
+}
+
+// 🚀 GERAR CARROSSEL
 function gerarCarrossel(){
-  const temaInput = document.getElementById("tema").value;
 
-  if(!temaInput){
-    alert("Digite um tema");
-    return;
-  }
-
-  const tema = temaInput.toLowerCase();
+  const tema = document.getElementById("tema").value;
   const roteiro = gerarRoteiro(tema);
   const resultado = document.getElementById("resultado");
 
@@ -188,20 +191,19 @@ function gerarCarrossel(){
 
     const ctx = canvas.getContext("2d");
 
-    gerarFundo(ctx, tema);
+    gerarFundo(ctx);
     desenharTexto(ctx, texto);
-    desenharRodape(ctx);
+    desenharLogo(ctx);
 
     resultado.appendChild(canvas);
 
     const btn = document.createElement("button");
-    btn.classList.add("download-btn");
     btn.innerText = "Baixar slide " + (i+1);
 
     btn.onclick = () => {
       const link = document.createElement("a");
       link.download = "slide_" + (i+1) + ".png";
-      link.href = canvas.toDataURL("image/png");
+      link.href = canvas.toDataURL();
       link.click();
     };
 
